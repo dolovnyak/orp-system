@@ -738,12 +738,12 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 12 "Lexer.lex"
-{ std::cout << "OPT: " << yytext << std::endl; return T_OPTIMIZE; }
+{ return T_OPTIMIZE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 13 "Lexer.lex"
-{ std::cout << "WORD" << std::endl; yylval.word = strdup(yytext); return T_WORD; }
+{ yylval.word = strdup(yytext); return T_WORD; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -753,7 +753,7 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 15 "Lexer.lex"
-{ std::cout << "SEMIC" << std::endl; return T_SEMICOLON; }
+{ return T_SEMICOLON; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP

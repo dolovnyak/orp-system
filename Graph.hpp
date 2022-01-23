@@ -5,9 +5,14 @@
 
 class Graph {
  public:
-    Resource* GetResourceByName(std::string name);
+    Resource* GetResourceByName(const std::string& name);
+
     void AddResource(Resource resource);
+
+    void AddResourceToOptimize(Resource* resource);
+
  private:
     std::vector<Process> _processes;
     std::vector<Resource> _resources;
+    std::vector<Resource*> _resources_to_optimize;
 };

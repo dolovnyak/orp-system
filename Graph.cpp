@@ -1,7 +1,7 @@
 #include "Graph.hpp"
 #include "logs.hpp"
 
-Resource* Graph::GetResourceByName(std::string name) {
+Resource* Graph::GetResourceByName(const std::string& name) {
     for (auto& resource : _resources) {
         if (resource.GetName() == name) {
             return &resource;
@@ -17,5 +17,9 @@ void Graph::AddResource(Resource resource) {
 
     _resources.push_back(resource);
     LOG_INFO("Added resource \"", resource.GetNumber(), " ", resource.GetName(), "\"");
+}
+
+void Graph::AddResourceToOptimize(Resource* resource) {
+
 }
 

@@ -6,18 +6,18 @@
    Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
+   the Free Software Foundation either version 2, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   but WITHOUT ANY WARRANTY without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
+   along with this program if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.  */
 
@@ -49,7 +49,7 @@
      T_OPTIMIZE = 264,
      T_NUMBER = 265,
      T_WORD = 266
-   };
+   }
 #endif
 /* Tokens.  */
 #define T_SEPARATOR 258
@@ -69,16 +69,16 @@
 typedef union YYSTYPE
 #line 15 "Grammar.yacc"
 {
-                    char* word;
-                    size_t number;
+                    char* word
+                    size_t number
                     }
 /* Line 1529 of yacc.c.  */
 #line 76 "Grammar.yy.hpp"
-	YYSTYPE;
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
+	YYSTYPE
+# define yystype YYSTYPE /* obsolescent will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
 
-extern YYSTYPE yylval;
+extern YYSTYPE yylval
 

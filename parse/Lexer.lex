@@ -9,10 +9,10 @@
 
 %%
 
-optimize        { std::cout << "OPT: " << yytext << std::endl; return T_OPTIMIZE; }
-[_a-zA-Z]+      { std::cout << "WORD" << std::endl; yylval.word = strdup(yytext); return T_WORD; }
+optimize        { return T_OPTIMIZE; }
+[_a-zA-Z]+      { yylval.word = strdup(yytext); return T_WORD; }
 ":"             { return T_COLON; }
-";"             { std::cout << "SEMIC" << std::endl; return T_SEMICOLON; }
+";"             { return T_SEMICOLON; }
 "("             { return T_OPEN_BRACKET; }
 ")"             { return T_CLOSE_BRACKET; }
 [0-9]+          {

@@ -58,55 +58,48 @@ RESOURCE:
 
 PROCESS:
                     T_WORD T_COLON PROCESS_REQUIRED T_COLON PROCESS_PRODUCED T_COLON T_NUMBER {
+                        graph->AddProcess(ParseProcess)
                         std::cout << "process \"" << $1 << "\"" << std::endl;
                     }
 
 PROCESS_REQUIRED:
-                    T_OPEN_BRACKET REQUIRED_RESOURCES T_CLOSE_BRACKET {
-                        std::cout << "PROCESS_REQUIRED" << std::endl;
-                    }
+                    T_OPEN_BRACKET REQUIRED_RESOURCES T_CLOSE_BRACKET
 
 REQUIRED_RESOURCES:
                     REQUIRED_RESOURCE
-                    | T_SEMICOLON REQUIRED_RESOURCES {
-                        std::cout << "REQUIRED_RESOURCES" << std::endl;
-                    }
+                    | T_SEMICOLON REQUIRED_RESOURCES
 
 REQUIRED_RESOURCE:
                     T_WORD T_COLON T_NUMBER {
-                        std::cout << "REQUIRED_RESOURCE: " << $1 << " " << $3 << std::endl;
+                        ParseProcess::AddRequiredResource($1, $3, graph);
                     }
 
 PROCESS_PRODUCED:
-                    T_OPEN_BRACKET PRODUCED_RESOURCES T_CLOSE_BRACKET {
-                        std::cout << "PROCESS_PRODUCED" << std::endl;
-                    }
+                    T_OPEN_BRACKET PRODUCED_RESOURCES T_CLOSE_BRACKET
 
 PRODUCED_RESOURCES:
                     PRODUCED_RESOURCE
-                    | T_SEMICOLON PRODUCED_RESOURCES {
-                        std::cout << "PRODUCED_RESOURCES" << std::endl;
-                    }
+                    | T_SEMICOLON PRODUCED_RESOURCES
 
 PRODUCED_RESOURCE:
                     T_WORD T_COLON T_NUMBER {
-                        std::cout << "PRODUCED_RESOURCE: " << $1 << " " << $3 << std::endl;
+                        ParseProcess::AddProducedResource($1, $3, graph);
                     }
 
 OPTIMIZE:
-                    T_OPTIMIZE T_COLON T_OPEN_BRACKET OPTIMIZE_RESOURCES T_CLOSE_BRACKET {
-                        std::cout << "AA OPTIMIZE" << std::endl;
-                    }
+                    T_OPTIMIZE T_COLON T_OPEN_BRACKET OPTIMIZE_RESOURCES T_CLOSE_BRACKET
 
 OPTIMIZE_RESOURCES:
                     OPTIMIZE_RESOURCE T_SEMICOLON OPTIMIZE_RESOURCES
-                    | OPTIMIZE_RESOURCE {
-                        std::cout << "AAA" << std::endl;
-                    }
+                    | OPTIMIZE_RESOURCE
 
 OPTIMIZE_RESOURCE:
                     T_WORD {
-                        std::cout << $1 << std::endl;
+                        Resource* resource = graph->GetResourceByName($1);
+                         if (resource == nullptr) {
+                            throw std::runtime_error("Try optimize not existed resource");
+                        }
+                        graph->AddResourceToOptimize(resource);
                     }
 
 %%
