@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Graph.hpp"
 
 class ParseProcess {
@@ -5,12 +7,12 @@ class ParseProcess {
     static void AddRequiredResource(const std::string& name, size_t number, Graph* graph);
     static void AddProducedResource(const std::string& name, size_t number, Graph* graph);
 
-    static Process GetAndDeleteProcess(const )
+    static std::vector<std::pair<Resource*, size_t>> GetRequiredResources();
+    static std::vector<std::pair<Resource*, size_t>> GetProducedResources();
+
+    static void CleanUp();
 
  private:
-    static std::vector<Resource*> _required_resources;
-    static std::vector<Resource*> _produced_resources;
-
-    /// zeroes and empty data by default
-    static Process _process;
+    static std::vector<std::pair<Resource*, size_t>> _required_resources;
+    static std::vector<std::pair<Resource*, size_t>> _produced_resources;
 };

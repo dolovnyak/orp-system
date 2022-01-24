@@ -438,8 +438,8 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    39,    39,    40,    42,    43,    44,    45,    48,    49,
-      52,    60,    65,    70,    71,    76,    81,    86,    87,    92,
-      97,   102,   103,   108
+      52,    60,    72,    75,    76,    79,    84,    87,    88,    91,
+      96,    99,   100,   103
 };
 #endif
 
@@ -1386,76 +1386,50 @@ yyreduce:
   case 11:
 #line 60 "Grammar.yacc"
     {
-                        std::cout << "process \"" << (yyvsp[(1) - (7)].word) << "\"" << std::endl;
-                    }
-    break;
-
-  case 12:
-#line 65 "Grammar.yacc"
-    {
-                        std::cout << "PROCESS_REQUIRED" << std::endl;
-                    }
-    break;
-
-  case 14:
-#line 71 "Grammar.yacc"
-    {
-                        std::cout << "REQUIRED_RESOURCES" << std::endl;
+                        if (graph->GetProcessByName((yyvsp[(1) - (7)].word)) != nullptr) {
+                            throw std::runtime_error("Multiple initializations of the same process");
+                        }
+                        Process process((yyvsp[(1) - (7)].word), (yyvsp[(7) - (7)].number),
+                                        ParseProcess::GetRequiredResources(),
+                                        ParseProcess::GetProducedResources());
+                        graph->AddProcess(process);
+                        ParseProcess::CleanUp();
                     }
     break;
 
   case 15:
-#line 76 "Grammar.yacc"
+#line 79 "Grammar.yacc"
     {
-                        std::cout << "REQUIRED_RESOURCE: " << (yyvsp[(1) - (3)].word) << " " << (yyvsp[(3) - (3)].number) << std::endl;
-                    }
-    break;
-
-  case 16:
-#line 81 "Grammar.yacc"
-    {
-                        std::cout << "PROCESS_PRODUCED" << std::endl;
-                    }
-    break;
-
-  case 18:
-#line 87 "Grammar.yacc"
-    {
-                        std::cout << "PRODUCED_RESOURCES" << std::endl;
+                        ParseProcess::AddRequiredResource((yyvsp[(1) - (3)].word), (yyvsp[(3) - (3)].number), graph);
                     }
     break;
 
   case 19:
-#line 92 "Grammar.yacc"
+#line 91 "Grammar.yacc"
     {
-                        std::cout << "PRODUCED_RESOURCE: " << (yyvsp[(1) - (3)].word) << " " << (yyvsp[(3) - (3)].number) << std::endl;
-                    }
-    break;
-
-  case 20:
-#line 97 "Grammar.yacc"
-    {
-                        std::cout << "AA OPTIMIZE" << std::endl;
-                    }
-    break;
-
-  case 22:
-#line 103 "Grammar.yacc"
-    {
-                        std::cout << "AAA" << std::endl;
+                        ParseProcess::AddProducedResource((yyvsp[(1) - (3)].word), (yyvsp[(3) - (3)].number), graph);
                     }
     break;
 
   case 23:
-#line 108 "Grammar.yacc"
+#line 103 "Grammar.yacc"
     {
-                        std::cout << (yyvsp[(1) - (1)].word) << std::endl;
-                    }
+                        if (strcmp((yyvsp[(1) - (1)].word), "time") == 0) {
+                            graph->AddOptimizeByTime();
+                        }
+                        else {
+                            Resource* resource = graph->GetResourceByName((yyvsp[(1) - (1)].word));
+                             if (resource == nullptr) {
+                                throw std::runtime_error("Try optimize not existed resource");
+                            }
+                            graph->AddResourceToOptimize(resource);
+                        }
+                   }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1459 "Grammar.yy.cpp"
+#line 1433 "Grammar.yy.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1669,6 +1643,6 @@ yyreturn:
 }
 
 
-#line 112 "Grammar.yacc"
+#line 116 "Grammar.yacc"
 
 

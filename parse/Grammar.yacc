@@ -58,8 +58,14 @@ RESOURCE:
 
 PROCESS:
                     T_WORD T_COLON PROCESS_REQUIRED T_COLON PROCESS_PRODUCED T_COLON T_NUMBER {
-                        graph->AddProcess(ParseProcess)
-                        std::cout << "process \"" << $1 << "\"" << std::endl;
+                        if (graph->GetProcessByName($1) != nullptr) {
+                            throw std::runtime_error("Multiple initializations of the same process");
+                        }
+                        Process process($1, $7,
+                                        ParseProcess::GetRequiredResources(),
+                                        ParseProcess::GetProducedResources());
+                        graph->AddProcess(process);
+                        ParseProcess::CleanUp();
                     }
 
 PROCESS_REQUIRED:
@@ -95,11 +101,16 @@ OPTIMIZE_RESOURCES:
 
 OPTIMIZE_RESOURCE:
                     T_WORD {
-                        Resource* resource = graph->GetResourceByName($1);
-                         if (resource == nullptr) {
-                            throw std::runtime_error("Try optimize not existed resource");
+                        if (strcmp($1, "time") == 0) {
+                            graph->AddOptimizeByTime();
                         }
-                        graph->AddResourceToOptimize(resource);
-                    }
+                        else {
+                            Resource* resource = graph->GetResourceByName($1);
+                             if (resource == nullptr) {
+                                throw std::runtime_error("Try optimize not existed resource");
+                            }
+                            graph->AddResourceToOptimize(resource);
+                        }
+                   }
 
 %%

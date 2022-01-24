@@ -4,17 +4,22 @@
 
 class Process {
  public:
+    Process(const std::string& name, size_t cycles_number,
+            const std::vector<std::pair<Resource*, size_t>>& required_resources,
+            const std::vector<std::pair<Resource*, size_t>>& produced_resources);
+
     void IncrementCycle();
 
     [[nodiscard]] bool ShouldDie() const;
 
     void CollectResources();
 
-    void AddRequiredResource(Resource* resource, size_t number);
+    [[nodiscard]] const std::string& GetName() const;
 
-    void AddProducedResource(Resource* resource, size_t number);
+    [[nodiscard]] std::vector<std::pair<Resource*, size_t>>& GetProducedResources();
 
  private:
+    std::string _name;
     size_t _cycles_number = 0;
     size_t _current_cycle = 0;
     std::vector<std::pair<Resource*, size_t>> _required_resources;

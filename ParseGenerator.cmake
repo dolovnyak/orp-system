@@ -3,7 +3,7 @@ set(LEX_CPP "Lexer.ll.cpp")
 set(YACC_INPUT "Grammar.yacc")
 set(YACC_CPP "Grammar.yy.cpp")
 set(YACC_HPP "Grammar.yy.hpp")
-set(INCLUDE_FOR_YACC_HEADER "#include \"Graph.hpp\"")
+set(INCLUDE_FOR_YACC_HEADER "#include \"ParseProcess.hpp\"")
 set(PARSE_DIR "${CMAKE_SOURCE_DIR}/parse")
 
 # generate lex/yacc parse when build
@@ -35,4 +35,3 @@ execute_process(COMMAND yacc -d -o ${YACC_CPP} ${YACC_INPUT}
 file(WRITE ${YACC_HPP} "${INCLUDE_FOR_YACC_HEADER}\n")
 file(READ ${PARSE_DIR}/${YACC_HPP} YACC_HEADER)
 file(APPEND ${YACC_HPP} ${YACC_HEADER})
-execute_process(COMMAND rm -f ${PARSE_DIR}/${YACC_HPP})

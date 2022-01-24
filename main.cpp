@@ -69,6 +69,7 @@ int main(int argc, char** argv) {
         size_t cycles_number = argparse.get<size_t>("--cycles");
         size_t current_cycle = 0;
 
+        graph.Print();
         while (current_cycle < cycles_number) {
             running_processes_processing(running_processes);
             // update resource prices

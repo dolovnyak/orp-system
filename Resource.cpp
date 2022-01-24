@@ -13,3 +13,11 @@ const std::string& Resource::GetName() const {
 size_t Resource::GetNumber() const {
     return _number;
 }
+
+void Resource::AddProcess(Process* process) {
+    _processes.push_back(process);
+}
+
+const std::vector<Process*> Resource::GetProcesses() const {
+    return _processes;
+}

@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
         parse/Grammar.yy.cpp
         parse/Lexer.ll.cpp
         parse/ParseProcess.cpp
+        parse/ParseProcess.hpp
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

@@ -7,13 +7,20 @@
 class Process;
 
 class Resource {
- public:
+public:
     Resource(std::string name, size_t number);
+
     void Add(size_t number);
+
     [[nodiscard]] const std::string& GetName() const;
+
     [[nodiscard]] size_t GetNumber() const;
 
- private:
+    void AddProcess(Process* process);
+
+    [[nodiscard]] const std::vector<Process*> GetProcesses() const;
+
+private:
     std::string _name;
     std::vector<Process*> _processes;
     size_t _number = 0;
