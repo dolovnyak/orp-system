@@ -65,3 +65,25 @@ void Graph::Print() const {
     }
 }
 
+std::list<Resource>& Graph::GetResources() {
+    return _resources;
+}
+
+double Graph::CalculateAFromB(Resource* a, Resource* b) {
+    for (const auto& a_process : a->GetProcesses()) {
+        std::vector<std::pair<Resource*, long>> simplified_required_resources;
+
+        for (const auto& produced_resource_p : a_process->GetProducedResources()) {
+            auto is_equal_ref = [produced_resource_p](const std::pair<Resource*, long>& pair)
+                    { return pair.first == produced_resource_p.first; };
+
+//            if (produced_resource_p.first != a) {
+//                auto eq_resource_it = std::find(simplified_required_resources.begin(),
+//                                                simplified_required_resources.end(), is_equal_ref);
+//                if (std)
+//            }
+        }
+        }
+    }
+}
+

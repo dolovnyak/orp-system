@@ -18,6 +18,8 @@ class Process {
 
     [[nodiscard]] std::vector<std::pair<Resource*, size_t>>& GetProducedResources();
 
+    [[nodiscard]] std::vector<std::pair<Resource*, size_t>>& GetRequiredResources();
+
  private:
     std::string _name;
     size_t _cycles_number = 0;

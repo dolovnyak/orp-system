@@ -18,6 +18,18 @@ void Resource::AddProcess(Process* process) {
     _processes.push_back(process);
 }
 
-const std::vector<Process*> Resource::GetProcesses() const {
+const std::vector<Process*>& Resource::GetProcesses() const {
     return _processes;
+}
+
+void Resource::SetCurrentPrice(double current_price) {
+    _current_price = current_price;
+}
+
+bool Resource::IsAvailable() const {
+    return _available;
+}
+
+void Resource::SetAvailable(bool available) {
+    _available = available;
 }

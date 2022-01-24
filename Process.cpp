@@ -33,3 +33,7 @@ const std::string& Process::GetName() const {
 std::vector<std::pair<Resource*, size_t>>& Process::GetProducedResources() {
     return _produced_resources;
 }
+
+std::vector<std::pair<Resource*, size_t>>& Process::GetRequiredResources() {
+    return _required_resources;
+}

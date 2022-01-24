@@ -18,6 +18,10 @@ class Graph {
 
     void AddOptimizeByTime();
 
+    std::list<Resource>& GetResources();
+
+    [[nodiscard]] double CalculateAFromB(Resource* a, Resource* b);
+
     void Print() const;
 
  private:

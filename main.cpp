@@ -1,4 +1,6 @@
 #include <limits>
+#include <cmath>
+#include <unordered_map>
 #include "argparse.hpp"
 #include "Graph.hpp"
 #include "Grammar.yy.hpp"
@@ -6,6 +8,18 @@
 int yyparse(Graph* graph);
 
 extern FILE* yyin;
+
+namespace {
+
+struct AveragePrice {
+
+    [[nodiscard]] double GetAveragePrice() {
+        return price / static_cast<double>(number);
+    }
+
+    double price = 0;
+    size_t number = 0;
+};
 
 Graph parse_graph(FILE* file) {
     yyin = file;
@@ -36,6 +50,39 @@ void running_processes_processing(std::list<Process>& running_processes) {
         }
         ++running_process;
     }
+}
+
+void calculate_resource_price(Graph& graph) {
+    std::unordered_map<Resource*, AveragePrice> final_prices;
+
+    for (auto& a: graph.GetResources()) {
+        for (auto& b: graph.GetResources()) {
+            double resource_a_calculated_from_b = graph.CalculateAFromB(&a, &b);
+            if (!std::isnan(resource_a_calculated_from_b)) {
+                /// increase average A price
+                if (final_prices.count(&a) == 0) {
+                    final_prices[&a] = AveragePrice{resource_a_calculated_from_b, 1};
+                } else {
+                    final_prices[&a].price += resource_a_calculated_from_b;
+                    final_prices[&a].number += 1;
+                }
+            }
+        }
+    }
+
+    for (auto& resource: graph.GetResources()) {
+        if (final_prices.count(&resource) != 0) {
+            resource.SetCurrentPrice(final_prices[&resource].GetAveragePrice());
+        } else {
+            resource.SetAvailable(false);
+        }
+    }
+}
+
+void run_processes_by_lower_price(const Graph& graph, std::list<Process>& running_processes) {
+
+}
+
 }
 
 int main(int argc, char** argv) {
@@ -72,8 +119,8 @@ int main(int argc, char** argv) {
         graph.Print();
         while (current_cycle < cycles_number) {
             running_processes_processing(running_processes);
-            // update resource prices
-            // run processes
+            calculate_resource_price(graph);
+            run_processes_by_lower_price(graph, running_processes);
             ++current_cycle;
         }
 
