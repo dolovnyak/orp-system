@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <list>
+#include <algorithm>
 
 class Process;
 
@@ -27,6 +29,8 @@ public:
     void SetAvailable(bool available);
 
     [[nodiscard]] double GetPrice() const;
+
+    void SortProcessesByProfit();
 
 private:
     std::string _name;

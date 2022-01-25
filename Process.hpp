@@ -22,10 +22,28 @@ class Process {
 
     [[nodiscard]] size_t GetCyclesNumber() const;
 
+    [[nodiscard]] double GetProfit() const;
+
+    void CalculateProfit();
+
+    void RecursiveRun(std::list<Process>& running_processes);
+
+    static bool ProfitComparator(Process* a, Process* b);
+
+    [[nodiscard]] bool IsAvailable();
+
+    void SetAvailable(bool available);
+
  private:
     std::string _name;
     size_t _cycles_number = 0;
     size_t _current_cycle = 0;
     std::vector<std::pair<Resource*, double>> _required_resources;
     std::vector<std::pair<Resource*, double>> _produced_resources;
+    double _profit = 0;
+    bool _available;
+
+    void StartProcess();
+
+    [[nodiscard]] bool CanStart() const;
 };

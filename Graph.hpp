@@ -20,6 +20,10 @@ class Graph {
 
     std::list<Resource>& GetResources();
 
+    [[nodiscard]] std::vector<Resource*>& GetResourcesToOptimize();
+
+    [[nodiscard]] std::list<Process>& GetProcesses();
+
     [[nodiscard]] double CalculateAFromB(Resource* a, Resource* b);
 
     void Print() const;

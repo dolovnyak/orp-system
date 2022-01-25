@@ -41,3 +41,75 @@ std::vector<std::pair<Resource*, double>>& Process::GetRequiredResources() {
 size_t Process::GetCyclesNumber() const {
     return _cycles_number;
 }
+
+bool Process::CanStart() const {
+    for (auto required_resource_p : _required_resources) {
+        double required_resource_number = required_resource_p.second;
+        double actual_resource_number = required_resource_p.first->GetNumber();
+        if (required_resource_number > actual_resource_number) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Process::StartProcess() {
+    for (auto required_resource_p : _required_resources) {
+        required_resource_p.first->Add(-required_resource_p.second);
+    }
+}
+
+double Process::GetProfit() const {
+    return _profit;
+}
+
+/// example profit calculation:
+/// 3A + 2B = C + D
+/// A = 1, B = 2, C = 4, D = 6
+/// 3 * 1 + 2 * 2 = 4 + 6
+/// 7 = 10
+/// profit is 10 - 7 = 3
+void Process::CalculateProfit() {
+    double required_price = 0;
+    double produced_price = 0;
+
+    for (const auto& required_resource_p : _required_resources) {
+        required_price += required_resource_p.first->GetPrice() * required_resource_p.second;
+    }
+    for (const auto& produced_resource_p : _produced_resources) {
+        produced_price += produced_resource_p.first->GetPrice() * produced_resource_p.second;
+    }
+
+    _profit = produced_price - required_price;
+}
+
+bool Process::ProfitComparator(Process* a, Process* b) {
+    return a->GetProfit() <= b->GetProfit();
+}
+
+void Process::RecursiveRun(std::list<Process>& running_processes) {
+    if (!IsAvailable()) {
+        return;
+    }
+    SetAvailable(false);
+    while (CanStart()) {
+        Process running_process(*this);
+        running_process.StartProcess();
+        running_processes.push_back(running_process);
+    }
+    for (auto required_resource_p : _required_resources) {
+        auto required_resource = required_resource_p.first;
+        for (auto process : required_resource->GetProcesses()) {
+            process->RecursiveRun(running_processes);
+        }
+    }
+    SetAvailable(true);
+}
+
+[[nodiscard]] bool Process::IsAvailable() {
+    return _available;
+}
+
+void Process::SetAvailable(bool available) {
+    _available = available;
+}

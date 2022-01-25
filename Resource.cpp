@@ -1,4 +1,5 @@
 #include "Resource.hpp"
+#include "Process.hpp"
 
 #include <utility>
 
@@ -38,4 +39,8 @@ void Resource::SetAvailable(bool available) {
 
 double Resource::GetPrice() const {
     return _price;
+}
+
+void Resource::SortProcessesByProfit() {
+    std::sort(_processes.begin(), _processes.end(), Process::ProfitComparator);
 }

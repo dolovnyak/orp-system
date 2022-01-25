@@ -1,6 +1,7 @@
 #include <limits>
 #include <cmath>
 #include <unordered_map>
+#include <queue>
 #include "argparse.hpp"
 #include "Graph.hpp"
 #include "Grammar.yy.hpp"
@@ -74,14 +75,23 @@ void calculate_resource_price(Graph& graph) {
         if (final_prices.count(&resource) != 0) {
             resource.SetCurrentPrice(final_prices[&resource].GetAveragePrice());
         } else {
-            /// If it's impossible to get resource from other resources we set him min price (spend him first)
-            resource.SetCurrentPrice(std::numeric_limits<double>::lowest());
+            resource.SetCurrentPrice(1);
         }
     }
 }
 
-void run_processes_by_lower_price(const Graph& graph, std::list<Process>& running_processes) {
+void run_optimize_processes_by_profit(Graph& graph, std::list<Process>& running_processes) {
+    std::vector<Process*> combined_processes;
 
+    for (auto& resource_to_optimize: graph.GetResourcesToOptimize()) {
+        combined_processes.insert(combined_processes.end(), resource_to_optimize->GetProcesses().begin(),
+                                  resource_to_optimize->GetProcesses().end());
+    }
+    std::sort(combined_processes.begin(), combined_processes.end(), Process::ProfitComparator);
+
+    for (auto process: combined_processes) {
+        process->RecursiveRun(running_processes);
+    }
 }
 
 }
@@ -99,7 +109,8 @@ int main(int argc, char** argv) {
 
     argparse.add_argument("-c", "--cycles")
             .default_value(std::numeric_limits<size_t>::max())
-            .help("specify the cycles number.");
+            .help("specify the cycles number.")
+            .action([](const std::string &value) { return static_cast<size_t>(std::stol(value)); });
 
     try {
         argparse.parse_args(argc, argv);
@@ -117,16 +128,34 @@ int main(int argc, char** argv) {
         size_t cycles_number = argparse.get<size_t>("--cycles");
         size_t current_cycle = 0;
 
-        graph.Print();
         while (current_cycle < cycles_number) {
+
+            /// increment all processes, stop and collect resources if needed cycles done
             running_processes_processing(running_processes);
+
+            /// calculate each resource from all resource
+            /// (for now it's not use current resource states and could run 1 time in begin)
             calculate_resource_price(graph);
-            graph.Print();
-            exit(0);
-            run_processes_by_lower_price(graph, running_processes);
+
+            /// calculate profit for each process
+            for (auto& process : graph.GetProcesses()) {
+                process.CalculateProfit();
+            }
+
+            /// sort processes by profit for each resource
+            for (auto& resource: graph.GetResources()) {
+                resource.SortProcessesByProfit();
+            }
+
+            run_optimize_processes_by_profit(graph, running_processes);
+
+            if (running_processes.empty()) {
+                break;
+            }
+
             ++current_cycle;
         }
-
+        graph.Print();
     }
     catch (const std::exception& exception) {
         std::cout << exception.what() << std::endl;

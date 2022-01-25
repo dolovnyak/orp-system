@@ -125,6 +125,7 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
                     continue;
                 }
                 b_multipliers_sum += tmp_multiplier;
+                b_multiplier_set = true;
             }
         }
         if (b_multiplier_set) {
@@ -139,3 +140,10 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
     return std::numeric_limits<double>::quiet_NaN();
 }
 
+std::list<Process>& Graph::GetProcesses() {
+    return _processes;
+}
+
+std::vector<Resource*>& Graph::GetResourcesToOptimize() {
+    return _resources_to_optimize;
+}
