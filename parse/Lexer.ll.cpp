@@ -769,47 +769,44 @@ case 7:
 YY_RULE_SETUP
 #line 18 "Lexer.lex"
 {
-                    long number = std::stol(yytext);
-                    if (number < 0) {
-                       throw std::runtime_error("LEX EXCEPTION: negative number \"" + std::string(yytext) + "\"");
-                    }
+                    double number = std::stod(yytext);
                     yylval.number = number;
                     return T_NUMBER;
                 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "Lexer.lex"
+#line 24 "Lexer.lex"
 { ; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 28 "Lexer.lex"
+#line 25 "Lexer.lex"
 { return T_SEPARATOR; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 29 "Lexer.lex"
+#line 26 "Lexer.lex"
 { return T_SEPARATOR; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 30 "Lexer.lex"
+#line 27 "Lexer.lex"
 { return T_SEPARATOR; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "Lexer.lex"
+#line 28 "Lexer.lex"
 { throw std::runtime_error("LEX EXCEPTION: lexeme \"" + std::string(yytext) + "\" doesn't correct"); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "Lexer.lex"
+#line 30 "Lexer.lex"
 ECHO;
 	YY_BREAK
-#line 813 "Lexer.ll.cpp"
+#line 810 "Lexer.ll.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1769,7 +1766,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 33 "Lexer.lex"
+#line 30 "Lexer.lex"
 
 
 

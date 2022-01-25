@@ -74,7 +74,8 @@ void calculate_resource_price(Graph& graph) {
         if (final_prices.count(&resource) != 0) {
             resource.SetCurrentPrice(final_prices[&resource].GetAveragePrice());
         } else {
-            resource.SetAvailable(false);
+            /// If it's impossible to get resource from other resources we set him min price (spend him first)
+            resource.SetCurrentPrice(std::numeric_limits<double>::lowest());
         }
     }
 }
@@ -120,6 +121,8 @@ int main(int argc, char** argv) {
         while (current_cycle < cycles_number) {
             running_processes_processing(running_processes);
             calculate_resource_price(graph);
+            graph.Print();
+            exit(0);
             run_processes_by_lower_price(graph, running_processes);
             ++current_cycle;
         }

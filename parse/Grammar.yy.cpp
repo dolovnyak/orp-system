@@ -130,7 +130,7 @@ typedef union YYSTYPE
 #line 15 "Grammar.yacc"
 {
                     char* word;
-                    size_t number;
+                    double number;
                     }
 /* Line 193 of yacc.c.  */
 #line 137 "Grammar.yy.cpp"
@@ -1377,7 +1377,7 @@ yyreduce:
 #line 52 "Grammar.yacc"
     {
                         if (graph->GetResourceByName((yyvsp[(1) - (3)].word)) != nullptr) {
-                            throw std::runtime_error("Multiple initializations of the same resource");
+                            throw std::runtime_error("Multiple initializations of the same resource \"" + std::string((yyvsp[(1) - (3)].word)) + "\"");
                         }
                         graph->AddResource(Resource((yyvsp[(1) - (3)].word), (yyvsp[(3) - (3)].number)));
                     }
@@ -1387,11 +1387,11 @@ yyreduce:
 #line 60 "Grammar.yacc"
     {
                         if (graph->GetProcessByName((yyvsp[(1) - (7)].word)) != nullptr) {
-                            throw std::runtime_error("Multiple initializations of the same process");
+                            throw std::runtime_error("Multiple initializations of the same process \"" + std::string((yyvsp[(1) - (7)].word)) + "\"");
                         }
                         Process process((yyvsp[(1) - (7)].word), (yyvsp[(7) - (7)].number),
-                                        ParseProcess::GetRequiredResources(),
-                                        ParseProcess::GetProducedResources());
+                                        std::move(ParseProcess::GetRequiredResources()),
+                                        std::move(ParseProcess::GetProducedResources()));
                         graph->AddProcess(process);
                         ParseProcess::CleanUp();
                     }

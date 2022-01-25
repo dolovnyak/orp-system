@@ -7,7 +7,7 @@ euro:10
 # process name:(need1:qty1;need2:qty2;[...]):(result1:qty1;result2:qty2;[...]):cycles
 #
 equipment_purchase:(euro:8;euro:11):(equipment:1;equipment:3):10
-product_creation:(materiel:1):(product:1):30
+product_creation:(equipment:1;euro:1):(product:1):30
 Delivery:(product:1):(happy_client:1):20
 #
 # optimize time for no process possible (eating stock, produce all possible),

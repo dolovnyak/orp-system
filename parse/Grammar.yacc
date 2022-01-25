@@ -14,7 +14,7 @@ void yyerror(Graph* graph, const char *msg) {
 
 %union              {
                     char* word;
-                    size_t number;
+                    double number;
                     }
                     
 %parse-param        {Graph* graph}
@@ -51,7 +51,7 @@ SEPARATORS:
 RESOURCE:
                     T_WORD T_COLON T_NUMBER {
                         if (graph->GetResourceByName($1) != nullptr) {
-                            throw std::runtime_error("Multiple initializations of the same resource");
+                            throw std::runtime_error("Multiple initializations of the same resource \"" + std::string($1) + "\"");
                         }
                         graph->AddResource(Resource($1, $3));
                     }
@@ -59,11 +59,11 @@ RESOURCE:
 PROCESS:
                     T_WORD T_COLON PROCESS_REQUIRED T_COLON PROCESS_PRODUCED T_COLON T_NUMBER {
                         if (graph->GetProcessByName($1) != nullptr) {
-                            throw std::runtime_error("Multiple initializations of the same process");
+                            throw std::runtime_error("Multiple initializations of the same process \"" + std::string($1) + "\"");
                         }
                         Process process($1, $7,
-                                        ParseProcess::GetRequiredResources(),
-                                        ParseProcess::GetProducedResources());
+                                        std::move(ParseProcess::GetRequiredResources()),
+                                        std::move(ParseProcess::GetProducedResources()));
                         graph->AddProcess(process);
                         ParseProcess::CleanUp();
                     }

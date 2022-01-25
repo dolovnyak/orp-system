@@ -16,10 +16,7 @@ optimize        { return T_OPTIMIZE; }
 "("             { return T_OPEN_BRACKET; }
 ")"             { return T_CLOSE_BRACKET; }
 [0-9]+          {
-                    long number = std::stol(yytext);
-                    if (number < 0) {
-                       throw std::runtime_error("LEX EXCEPTION: negative number \"" + std::string(yytext) + "\"");
-                    }
+                    double number = std::stod(yytext);
                     yylval.number = number;
                     return T_NUMBER;
                 }

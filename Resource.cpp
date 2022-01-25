@@ -1,8 +1,10 @@
 #include "Resource.hpp"
 
-Resource::Resource(std::string name, size_t number) : _name(name), _number(number) {}
+#include <utility>
 
-void Resource::Add(size_t number) {
+Resource::Resource(std::string name, double number) : _name(std::move(name)), _number(number) {}
+
+void Resource::Add(double number) {
     _number += number;
 }
 
@@ -10,7 +12,7 @@ const std::string& Resource::GetName() const {
     return _name;
 }
 
-size_t Resource::GetNumber() const {
+double Resource::GetNumber() const {
     return _number;
 }
 
@@ -18,12 +20,12 @@ void Resource::AddProcess(Process* process) {
     _processes.push_back(process);
 }
 
-const std::vector<Process*>& Resource::GetProcesses() const {
+std::vector<Process*>& Resource::GetProcesses() {
     return _processes;
 }
 
 void Resource::SetCurrentPrice(double current_price) {
-    _current_price = current_price;
+    _price = current_price;
 }
 
 bool Resource::IsAvailable() const {
@@ -32,4 +34,8 @@ bool Resource::IsAvailable() const {
 
 void Resource::SetAvailable(bool available) {
     _available = available;
+}
+
+double Resource::GetPrice() const {
+    return _price;
 }

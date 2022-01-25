@@ -8,17 +8,17 @@ class Process;
 
 class Resource {
 public:
-    Resource(std::string name, size_t number);
+    Resource(std::string name, double number);
 
-    void Add(size_t number);
+    void Add(double number);
 
     [[nodiscard]] const std::string& GetName() const;
 
-    [[nodiscard]] size_t GetNumber() const;
+    [[nodiscard]] double GetNumber() const;
 
     void AddProcess(Process* process);
 
-    [[nodiscard]] const std::vector<Process*>& GetProcesses() const;
+    [[nodiscard]] std::vector<Process*>& GetProcesses();
 
     void SetCurrentPrice(double current_price);
 
@@ -26,10 +26,12 @@ public:
 
     void SetAvailable(bool available);
 
+    [[nodiscard]] double GetPrice() const;
+
 private:
     std::string _name;
     std::vector<Process*> _processes;
-    size_t _number = 0;
-    double _current_price = 0;
+    double _number = 0;
+    double _price = 0;
     bool _available = true;
 };

@@ -70,7 +70,7 @@ typedef union YYSTYPE
 #line 15 "Grammar.yacc"
 {
                     char* word;
-                    size_t number;
+                    double number;
                     }
 /* Line 1529 of yacc.c.  */
 #line 76 "Grammar.yy.hpp"
