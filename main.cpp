@@ -5,22 +5,13 @@
 #include "argparse.hpp"
 #include "Graph.hpp"
 #include "Grammar.yy.hpp"
+#include "PriceCalculator.hpp"
 
 int yyparse(Graph* graph);
 
 extern FILE* yyin;
 
 namespace {
-
-struct AveragePrice {
-
-    [[nodiscard]] double GetAveragePrice() {
-        return price / static_cast<double>(number);
-    }
-
-    double price = 0;
-    size_t number = 0;
-};
 
 Graph parse_graph(FILE* file) {
     yyin = file;
@@ -43,42 +34,19 @@ FILE* open_file(const std::string& file_name) {
 void running_processes_processing(std::list<Process>& running_processes) {
     auto running_process = running_processes.begin();
 
+    int test = 0;
     while (running_process != running_processes.end()) {
+        ++test;
         running_process->IncrementCycle();
         if (running_process->ShouldDie()) {
             running_process->CollectResources();
-            running_processes.erase(running_process);
+            running_process = running_processes.erase(running_process);
+            continue;
         }
         ++running_process;
     }
 }
 
-void calculate_resource_price(Graph& graph) {
-    std::unordered_map<Resource*, AveragePrice> final_prices;
-
-    for (auto& a: graph.GetResources()) {
-        for (auto& b: graph.GetResources()) {
-            double resource_a_calculated_from_b = graph.CalculateAFromB(&a, &b);
-            if (!std::isnan(resource_a_calculated_from_b)) {
-                /// increase average A price
-                if (final_prices.count(&a) == 0) {
-                    final_prices[&a] = AveragePrice{resource_a_calculated_from_b, 1};
-                } else {
-                    final_prices[&a].price += resource_a_calculated_from_b;
-                    final_prices[&a].number += 1;
-                }
-            }
-        }
-    }
-
-    for (auto& resource: graph.GetResources()) {
-        if (final_prices.count(&resource) != 0) {
-            resource.SetCurrentPrice(final_prices[&resource].GetAveragePrice());
-        } else {
-            resource.SetCurrentPrice(1);
-        }
-    }
-}
 
 void run_optimize_processes_by_profit(Graph& graph, std::list<Process>& running_processes) {
     std::vector<Process*> combined_processes;
@@ -133,14 +101,8 @@ int main(int argc, char** argv) {
             /// increment all processes, stop and collect resources if needed cycles done
             running_processes_processing(running_processes);
 
-            /// calculate each resource from all resource
-            /// (for now it's not use current resource states and could run 1 time in begin)
-            calculate_resource_price(graph);
-
-            /// calculate profit for each process
-            for (auto& process : graph.GetProcesses()) {
-                process.CalculateProfit();
-            }
+            PriceCalculator::CalculateResourcePrice(graph);
+            PriceCalculator::CalculateProcessesProfit(graph);
 
             /// sort processes by profit for each resource
             for (auto& resource: graph.GetResources()) {

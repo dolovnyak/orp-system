@@ -8,6 +8,7 @@ add_executable(${PROJECT_NAME}
         Process.cpp
         Resource.cpp
         Graph.cpp
+        PriceCalculator.cpp
         parse/Grammar.yy.cpp
         parse/Lexer.ll.cpp
         parse/ParseProcess.cpp

@@ -4,7 +4,7 @@
 
 class Process {
  public:
-    Process(std::string  name, size_t cycles_number,
+    Process(std::string name, size_t cycles_number,
             std::vector<std::pair<Resource*, double>>  required_resources,
             std::vector<std::pair<Resource*, double>>  produced_resources);
 
@@ -34,6 +34,10 @@ class Process {
 
     void SetAvailable(bool available);
 
+    [[nodiscard]] bool CanStart() const;
+
+    [[nodiscard]] double GetProducedResourceMultiplier(Resource* produced_resource) const;
+
  private:
     std::string _name;
     size_t _cycles_number = 0;
@@ -41,9 +45,7 @@ class Process {
     std::vector<std::pair<Resource*, double>> _required_resources;
     std::vector<std::pair<Resource*, double>> _produced_resources;
     double _profit = 0;
-    bool _available;
+    bool _available = true;
 
     void StartProcess();
-
-    [[nodiscard]] bool CanStart() const;
 };

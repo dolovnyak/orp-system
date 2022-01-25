@@ -80,11 +80,11 @@ void Process::CalculateProfit() {
         produced_price += produced_resource_p.first->GetPrice() * produced_resource_p.second;
     }
 
-    _profit = produced_price - required_price;
+    _profit = (produced_price - required_price) / static_cast<double>(_cycles_number);
 }
 
 bool Process::ProfitComparator(Process* a, Process* b) {
-    return a->GetProfit() <= b->GetProfit();
+    return a->GetProfit() > b->GetProfit();
 }
 
 void Process::RecursiveRun(std::list<Process>& running_processes) {
@@ -112,4 +112,13 @@ void Process::RecursiveRun(std::list<Process>& running_processes) {
 
 void Process::SetAvailable(bool available) {
     _available = available;
+}
+
+double Process::GetProducedResourceMultiplier(Resource* produced_resource) const {
+    for (auto resource_p : _produced_resources) {
+        if (resource_p.first == produced_resource) {
+            return resource_p.second;
+        }
+    }
+    throw std::logic_error("Try get multiplier by not existed produced_resource");
 }
