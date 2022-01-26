@@ -34,8 +34,6 @@ public:
 
     void UpdateMaxNumber(double number);
 
-    void ResetMaxNumberIncrease();
-
     [[nodiscard]] bool HasMaxNumber();
 
     [[nodiscard]] double GetMaxNumber();

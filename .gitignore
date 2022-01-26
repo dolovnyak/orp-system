@@ -1,3 +1,5 @@
 *.idea
 *cmake-build-debug
 krpsim
+output
+*.DS_Store

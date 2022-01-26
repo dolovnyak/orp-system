@@ -66,13 +66,14 @@ bool Process::CanStart(size_t remaining_cycles) const {
     return NeedToStart();
 }
 
-void Process::StartProcess() {
+void Process::StartProcess(size_t current_cycle) {
     for (auto& required_resource_p : _required_resources) {
         required_resource_p.first->Add(-required_resource_p.second);
     }
     for (auto& produced_resource_p : _produced_resources) {
-        produced_resource_p.first->SetFutureIncome(produced_resource_p.second);
+        produced_resource_p.first->SetFutureIncome(produced_resource_p.first->GetFutureIncome() + produced_resource_p.second);
     }
+    std::cout << current_cycle << ":" << _name << "\n";
 }
 
 /// example profit calculation:

@@ -1,9 +1,5 @@
 #include "GraphCalculator.hpp"
 
-void GraphCalculator::CalculateAverageCoefficients(Graph& graph,
-                                                   std::unordered_map<Resource*, AveragePrice>& average_prices) {
-}
-
 void GraphCalculator::Calculate(Graph& graph) {
     std::unordered_map<Resource*, AveragePrice> average_prices;
 

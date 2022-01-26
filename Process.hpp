@@ -36,7 +36,7 @@ class Process {
 
     [[nodiscard]] size_t GetCyclesToGoal();
 
-    void StartProcess();
+    void StartProcess(size_t current_cycle);
 
  private:
     std::string _name;

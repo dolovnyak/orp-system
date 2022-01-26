@@ -30,4 +30,4 @@ set_target_properties(${PROJECT_NAME}
         )
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+#set(CMAKE_CXX_FLAGS_DEBUG "-O3")
