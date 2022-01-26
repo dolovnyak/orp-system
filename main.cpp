@@ -5,7 +5,7 @@
 #include "argparse.hpp"
 #include "Graph.hpp"
 #include "Grammar.yy.hpp"
-#include "PriceCoefficientCalculator.hpp"
+#include "GraphCalculator.hpp"
 
 int yyparse(Graph* graph);
 
@@ -70,28 +70,16 @@ void run_optimize_processes_by_profit(Graph& graph, std::list<Process>& running_
     }
 
     while (!possible_to_run_processes.empty()) {
-        Process* max_profit_process;
-        bool any_process_need_to_start = false;
+        Process* max_profit_process = nullptr;
         double current_max_profit = std::numeric_limits<double>::lowest();
         for (auto process : possible_to_run_processes) {
-            if (!process->NeedToStart()) {
-                continue;
-            }
-            any_process_need_to_start = true;
             double tmp_max_profit = process->CalculateProfit();
             if (tmp_max_profit > current_max_profit) {
                 max_profit_process = process;
                 current_max_profit = tmp_max_profit;
             }
         }
-        if (!any_process_need_to_start) {
-            if (running_processes.empty()) {
-                for (auto& resource : graph.GetResources()) {
-                    resource.UpdateMaxNumber(resource.GetMaxNumber() * 2);
-                }
-                delete_not_possible_to_start_processes(possible_to_run_processes, remaining_cycles);
-                continue;
-            }
+        if (max_profit_process == nullptr) {
             break;
         }
         Process running_process(*max_profit_process);
@@ -131,7 +119,7 @@ int main(int argc, char** argv) {
 
     try {
         Graph graph = parse_graph(open_file(argparse.get<std::string>("input_file")));
-        PriceCoefficientCalculator::Calculate(graph);
+        GraphCalculator::Calculate(graph);
         std::list<Process> running_processes;
         size_t cycles_number = argparse.get<size_t>("--cycles");
         size_t current_cycle = 0;

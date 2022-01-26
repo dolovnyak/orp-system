@@ -97,7 +97,6 @@ std::optional<Graph::MinMax> Graph::CalculateAFromB(Resource* a, Resource* b) {
     bool result_set = false;
 
     for (auto& a_process : a->GetProcesses()) {
-
         /// Get A multiplier
         double a_multiplier;
         for (const auto& produced_resource_p : a_process->GetProducedResources()) {
@@ -153,4 +152,25 @@ std::list<Process>& Graph::GetProcesses() {
 
 std::vector<Resource*>& Graph::GetResourcesToOptimize() {
     return _resources_to_optimize;
+}
+
+void Graph::CalculateProcessesCyclesToGoal(Resource* a, Resource* b, size_t prev_processes_cycles) {
+    a->SetAvailable(false);
+
+    for (auto& a_process : a->GetProcesses()) {
+        a_process->UpdateCyclesToGoal(prev_processes_cycles + a_process->GetCyclesNumber());
+
+        /// Calculate each required element from B and sum multipliers
+        for (auto& required_resource_p : a_process->GetRequiredResources()) {
+            if (!required_resource_p.first->IsAvailable()) {
+                /// Ignore unavailable resource
+                continue;
+            }
+            else {
+                /// If resource is available and it's not B. Calculate it from B
+                CalculateProcessesCyclesToGoal(required_resource_p.first, b, a_process->GetCyclesToGoal());
+            }
+        }
+    }
+    a->SetAvailable(true);
 }

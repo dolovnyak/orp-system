@@ -32,12 +32,17 @@ class Process {
 
     [[nodiscard]] bool NeedToStart() const;
 
+    void UpdateCyclesToGoal(size_t min_cycles_to_goal);
+
+    [[nodiscard]] size_t GetCyclesToGoal();
+
     void StartProcess();
 
  private:
     std::string _name;
     size_t _required_cycles = 0;
     size_t _current_cycle = 0;
+    size_t _cycles_to_goal = std::numeric_limits<size_t>::max();
     std::vector<std::pair<Resource*, double>> _required_resources;
     std::vector<std::pair<Resource*, double>> _produced_resources;
 

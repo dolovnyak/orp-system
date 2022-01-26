@@ -32,6 +32,7 @@ void Process::CollectResources() {
         Resource* resource_ptr = resource_pair.first;
         double resource_number = resource_pair.second;
         resource_ptr->Add(resource_number);
+        resource_ptr->SetFutureIncome(resource_ptr->GetFutureIncome() - resource_pair.second);
     }
 }
 
@@ -52,7 +53,7 @@ size_t Process::GetCyclesNumber() const {
 }
 
 bool Process::CanStart(size_t remaining_cycles) const {
-    if (_required_cycles > remaining_cycles) {
+    if (_cycles_to_goal > remaining_cycles) {
         return false;
     }
     for (auto required_resource_p : _required_resources) {
@@ -62,7 +63,7 @@ bool Process::CanStart(size_t remaining_cycles) const {
             return false;
         }
     }
-    return true;
+    return NeedToStart();
 }
 
 void Process::StartProcess() {
@@ -102,4 +103,12 @@ bool Process::NeedToStart() const {
         }
     }
     return is_resources_needed;
+}
+
+void Process::UpdateCyclesToGoal(size_t min_cycles_to_goal) {
+    _cycles_to_goal = std::min(_cycles_to_goal, min_cycles_to_goal);
+}
+
+size_t Process::GetCyclesToGoal() {
+    return _cycles_to_goal;
 }

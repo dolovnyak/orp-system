@@ -1,9 +1,18 @@
 #include "Graph.hpp"
 #include <unordered_map>
 
-class PriceCoefficientCalculator {
+class GraphCalculator {
  public:
     static void Calculate(Graph& graph);
+
+    static bool IsResourceToOptimize(Resource* resource, Graph& graph) {
+        for (auto resources_to_optimize : graph.GetResourcesToOptimize()) {
+            if (resources_to_optimize == resource) {
+                return true;
+            }
+        }
+        return false;
+    }
 
  private:
     struct AveragePrice {

@@ -28,17 +28,19 @@ public:
 
     void SetAvailable(bool available);
 
-    [[nodiscard]] double GetPriceCoefficient() const;
-
     void SetPriceCoefficient(double price);
 
     [[nodiscard]] double GetEstimatedPrice() const;
 
     void UpdateMaxNumber(double number);
 
+    void ResetMaxNumberIncrease();
+
     [[nodiscard]] bool HasMaxNumber();
 
-    [[nodiscard]] bool GetMaxNumber();
+    [[nodiscard]] double GetMaxNumber();
+
+    [[nodiscard]] double GetFutureIncome();
 
 private:
     std::string _name;

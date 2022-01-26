@@ -1,19 +1,10 @@
-#include "PriceCoefficientCalculator.hpp"
+#include "GraphCalculator.hpp"
 
-void PriceCoefficientCalculator::CalculateAverageCoefficients(Graph& graph,
-                                                              std::unordered_map<Resource*, AveragePrice>& average_prices) {
+void GraphCalculator::CalculateAverageCoefficients(Graph& graph,
+                                                   std::unordered_map<Resource*, AveragePrice>& average_prices) {
 }
 
-bool is_resource_to_optimize(Resource* resource, Graph& graph) {
-    for (auto resources_to_optimize : graph.GetResourcesToOptimize()) {
-        if (resources_to_optimize == resource) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void PriceCoefficientCalculator::Calculate(Graph& graph) {
+void GraphCalculator::Calculate(Graph& graph) {
     std::unordered_map<Resource*, AveragePrice> average_prices;
 
     /// calculate average coefficient
@@ -32,9 +23,6 @@ void PriceCoefficientCalculator::Calculate(Graph& graph) {
                 }
             }
 
-            if (!is_resource_to_optimize(&resource, graph)) {
-                resource.UpdateMaxNumber(resource_a_calculated_from_b->max);
-            }
         }
     }
 
@@ -43,6 +31,18 @@ void PriceCoefficientCalculator::Calculate(Graph& graph) {
             resource.SetPriceCoefficient(1 / average_prices[&resource].GetAveragePrice());
         } else {
             resource.SetPriceCoefficient(1);
+        }
+    }
+
+    for (auto resource_to_optimize : graph.GetResourcesToOptimize()) {
+        for (auto& resource : graph.GetResources()) {
+            graph.CalculateProcessesCyclesToGoal(resource_to_optimize, &resource, 0);
+            auto check = graph.CalculateAFromB(resource_to_optimize, &resource);
+            if (check.has_value()) {
+                if (!IsResourceToOptimize(&resource, graph)) {
+                    resource.UpdateMaxNumber(check->max);
+                }
+            }
         }
     }
 

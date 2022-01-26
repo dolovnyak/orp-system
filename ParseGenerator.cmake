@@ -32,6 +32,6 @@ execute_process(COMMAND sed -i "" -- "s/register//g" ${LEX_CPP} #for compatibili
 execute_process(COMMAND yacc -d -o ${YACC_CPP} ${YACC_INPUT}
         WORKING_DIRECTORY ${PARSE_DIR}
         )
-file(WRITE ${YACC_HPP} "${INCLUDE_FOR_YACC_HEADER}\n")
-file(READ ${PARSE_DIR}/${YACC_HPP} YACC_HEADER)
-file(APPEND ${YACC_HPP} ${YACC_HEADER})
+#file(WRITE ${YACC_HPP} "${INCLUDE_FOR_YACC_HEADER}\n")
+#file(READ ${PARSE_DIR}/${YACC_HPP} YACC_HEADER)
+#file(APPEND ${YACC_HPP} ${YACC_HEADER})

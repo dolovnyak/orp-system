@@ -40,10 +40,6 @@ void Resource::SetAvailable(bool available) {
     _available = available;
 }
 
-double Resource::GetPriceCoefficient() const {
-    return _price_coefficient;
-}
-
 double Resource::GetEstimatedPrice() const {
     double future_number = _number + _future_income == 0 ? 1 : _number + _future_income;
     return 1 / future_number * _price_coefficient;
@@ -58,9 +54,13 @@ void Resource::UpdateMaxNumber(double number) {
 }
 
 bool Resource::HasMaxNumber() {
-    return _number + _future_income >= _max_number;
+    return _number + _future_income >= GetMaxNumber();
 }
 
-bool Resource::GetMaxNumber() {
+double Resource::GetMaxNumber() {
     return _max_number;
+}
+
+double Resource::GetFutureIncome() {
+    return _future_income;
 }

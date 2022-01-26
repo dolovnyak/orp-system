@@ -32,6 +32,8 @@ class Graph {
 
     [[nodiscard]] std::optional<MinMax> CalculateAFromB(Resource* a, Resource* b);
 
+    void CalculateProcessesCyclesToGoal(Resource* a, Resource* b, size_t prev_processes_cycles);
+
     void Print() const;
 
  private:
