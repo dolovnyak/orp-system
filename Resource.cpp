@@ -7,6 +7,9 @@ Resource::Resource(std::string name, double number) : _name(std::move(name)), _n
 
 void Resource::Add(double number) {
     _number += number;
+    if (_number < 0) {
+        throw std::logic_error("resource number < 0");
+    }
 }
 
 const std::string& Resource::GetName() const {
@@ -25,8 +28,8 @@ std::vector<Process*>& Resource::GetProcesses() {
     return _processes;
 }
 
-void Resource::SetCurrentPrice(double current_price) {
-    _price = current_price;
+void Resource::SetPriceCoefficient(double price) {
+    _price_coefficient = price;
 }
 
 bool Resource::IsAvailable() const {
@@ -37,10 +40,15 @@ void Resource::SetAvailable(bool available) {
     _available = available;
 }
 
-double Resource::GetPrice() const {
-    return _price;
+double Resource::GetPriceCoefficient() const {
+    return _price_coefficient;
 }
 
-void Resource::SortProcessesByProfit() {
-    std::sort(_processes.begin(), _processes.end(), Process::ProfitComparator);
+double Resource::GetEstimatedPrice() const {
+    double number = _number == 0 ? 1 : _number;
+    return 1 / _future_number * _price_coefficient;
+}
+
+void Resource::AddFuture(double number) {
+    _future_number += number;
 }

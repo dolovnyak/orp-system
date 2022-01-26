@@ -1,21 +1,30 @@
 #include "Process.hpp"
 
 #include <utility>
+#include <iostream>
 
-Process::Process(std::string  name, size_t cycles_number,
+Process::Process(std::string name, size_t cycles_number,
                  std::vector<std::pair<Resource*, double>>  required_resources,
                  std::vector<std::pair<Resource*, double>>  produced_resources)
         : _name(std::move(name)),
-          _cycles_number(cycles_number),
+          _required_cycles(cycles_number),
           _required_resources(std::move(required_resources)),
           _produced_resources(std::move(produced_resources)) {}
+
+Process::Process(const Process& process) {
+    _name = process._name;
+    _required_cycles = process._required_cycles;
+    _current_cycle = process._current_cycle;
+    _required_resources = process._required_resources;
+    _produced_resources = process._produced_resources;
+}
 
 void Process::IncrementCycle() {
     ++_current_cycle;
 }
 
 bool Process::ShouldDie() const {
-    return _current_cycle >= _cycles_number;
+    return _current_cycle >= _required_cycles;
 }
 
 void Process::CollectResources() {
@@ -39,10 +48,13 @@ std::vector<std::pair<Resource*, double>>& Process::GetRequiredResources() {
 }
 
 size_t Process::GetCyclesNumber() const {
-    return _cycles_number;
+    return _required_cycles;
 }
 
-bool Process::CanStart() const {
+bool Process::CanStart(size_t remaining_cycles) const {
+    if (_required_cycles > remaining_cycles) {
+        return false;
+    }
     for (auto required_resource_p : _required_resources) {
         double required_resource_number = required_resource_p.second;
         double actual_resource_number = required_resource_p.first->GetNumber();
@@ -54,13 +66,12 @@ bool Process::CanStart() const {
 }
 
 void Process::StartProcess() {
-    for (auto required_resource_p : _required_resources) {
+    for (auto& required_resource_p : _required_resources) {
         required_resource_p.first->Add(-required_resource_p.second);
     }
-}
-
-double Process::GetProfit() const {
-    return _profit;
+    for (auto& produced_resource_p : _produced_resources) {
+        produced_resource_p.first->AddFuture(produced_resource_p.second);
+    }
 }
 
 /// example profit calculation:
@@ -69,56 +80,48 @@ double Process::GetProfit() const {
 /// 3 * 1 + 2 * 2 = 4 + 6
 /// 7 = 10
 /// profit is 10 - 7 = 3
-void Process::CalculateProfit() {
+/// profit considering cycles number = 3 / _required_cycles
+double Process::CalculateProfit() {
     double required_price = 0;
     double produced_price = 0;
 
     for (const auto& required_resource_p : _required_resources) {
-        required_price += required_resource_p.first->GetPrice() * required_resource_p.second;
+        required_price += required_resource_p.first->GetEstimatedPrice() * required_resource_p.second;
     }
     for (const auto& produced_resource_p : _produced_resources) {
-        produced_price += produced_resource_p.first->GetPrice() * produced_resource_p.second;
+        produced_price += produced_resource_p.first->GetEstimatedPrice() * produced_resource_p.second;
     }
-
-    _profit = (produced_price - required_price) / static_cast<double>(_cycles_number);
+    return (produced_price - required_price) / static_cast<double>(_required_cycles);
 }
 
-bool Process::ProfitComparator(Process* a, Process* b) {
-    return a->GetProfit() > b->GetProfit();
-}
-
-void Process::RecursiveRun(std::list<Process>& running_processes) {
-    if (!IsAvailable()) {
-        return;
-    }
-    SetAvailable(false);
-    while (CanStart()) {
-        Process running_process(*this);
-        running_process.StartProcess();
-        running_processes.push_back(running_process);
-    }
-    for (auto required_resource_p : _required_resources) {
-        auto required_resource = required_resource_p.first;
-        for (auto process : required_resource->GetProcesses()) {
-            process->RecursiveRun(running_processes);
-        }
-    }
-    SetAvailable(true);
-}
-
-[[nodiscard]] bool Process::IsAvailable() {
-    return _available;
-}
-
-void Process::SetAvailable(bool available) {
-    _available = available;
-}
-
-double Process::GetProducedResourceMultiplier(Resource* produced_resource) const {
-    for (auto resource_p : _produced_resources) {
-        if (resource_p.first == produced_resource) {
-            return resource_p.second;
-        }
-    }
-    throw std::logic_error("Try get multiplier by not existed produced_resource");
-}
+//bool Process::RecursiveRun(std::list<Process>& running_processes, size_t remaining_cycles, size_t prev_cycles) {
+////    if (!IsAvailable()) {
+////        return;
+////    }
+//    if (prev_cycles + _required_cycles > remaining_cycles) {
+//        return false;
+//    }
+////    SetAvailable(false);
+//    bool is_any_process_run;
+//    if (CanStart()) {
+//        Process running_process(*this);
+//        running_process.StartProcess();
+//        running_processes.push_back(running_process);
+//        is_any_process_run = true;
+//    }
+//    for (auto required_resource_p : _required_resources) {
+//        auto required_resource = required_resource_p.first;
+//        if (!required_resource->IsAvailable()) {
+//            continue;
+//        }
+//        required_resource->SetAvailable(false);
+//        for (auto process : required_resource->GetProcesses()) {
+//            if (process->RecursiveRun(running_processes, remaining_cycles, prev_cycles + _required_cycles)) {
+//                is_any_process_run = true;
+//            }
+//        }
+//        required_resource->SetAvailable(true);
+//    }
+////    SetAvailable(true);
+//    return is_any_process_run;
+//}

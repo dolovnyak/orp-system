@@ -14,6 +14,8 @@ public:
 
     void Add(double number);
 
+    void AddFuture(double number);
+
     [[nodiscard]] const std::string& GetName() const;
 
     [[nodiscard]] double GetNumber() const;
@@ -22,20 +24,21 @@ public:
 
     [[nodiscard]] std::vector<Process*>& GetProcesses();
 
-    void SetCurrentPrice(double current_price);
-
     [[nodiscard]] bool IsAvailable() const;
 
     void SetAvailable(bool available);
 
-    [[nodiscard]] double GetPrice() const;
+    [[nodiscard]] double GetPriceCoefficient() const;
 
-    void SortProcessesByProfit();
+    void SetPriceCoefficient(double price);
+
+    [[nodiscard]] double GetEstimatedPrice() const;
 
 private:
     std::string _name;
     std::vector<Process*> _processes;
     double _number = 0;
-    double _price = 0;
+    double _future_number = 0;
+    double _price_coefficient = 0;
     bool _available = true;
 };

@@ -8,7 +8,7 @@ add_executable(${PROJECT_NAME}
         Process.cpp
         Resource.cpp
         Graph.cpp
-        PriceCalculator.cpp
+        PriceCoefficientCalculator.cpp
         parse/Grammar.yy.cpp
         parse/Lexer.ll.cpp
         parse/ParseProcess.cpp
@@ -28,3 +28,6 @@ set_target_properties(${PROJECT_NAME}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}"
         )
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+#set(CMAKE_CXX_FLAGS_DEBUG "-O3")

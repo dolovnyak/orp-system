@@ -56,7 +56,7 @@ void Graph::AddOptimizeByTime() {
 void Graph::Print() const {
     std::cout << "GRAPH:" << std::endl;
     for (const auto& resource : _resources) {
-        std::cout << "Resource: \"" << resource.GetName() << ":" << resource.GetNumber() << ":" << resource.GetPrice() << "\"" << std::endl;
+        std::cout << "Resource: \"" << resource.GetName() << ":" << resource.GetNumber() << ":" << resource.GetPriceCoefficient() << "\"" << std::endl;
     }
     std::cout << std::endl;
     std::cout << "Processes:" << std::endl;
@@ -105,7 +105,7 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
             }
         }
 
-        /// CalculateResourcePrice each required element from B and sum multipliers
+        /// Calculate each required element from B and sum multipliers
         double b_multipliers_sum = 0;
         bool b_multiplier_set = false;
         for (auto& required_resource_p : a_process->GetRequiredResources()) {
@@ -119,7 +119,7 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
                 continue;
             }
             else {
-                /// If resource is available and it's not B. CalculateResourcePrice it from B
+                /// If resource is available and it's not B. Calculate it from B
                 double tmp_multiplier = CalculateAFromB(required_resource_p.first, b);
                 if (std::isnan(tmp_multiplier)) {
                     continue;

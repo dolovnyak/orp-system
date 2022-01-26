@@ -8,6 +8,10 @@ class Process {
             std::vector<std::pair<Resource*, double>>  required_resources,
             std::vector<std::pair<Resource*, double>>  produced_resources);
 
+    Process(const Process& process);
+
+
+
     void IncrementCycle();
 
     [[nodiscard]] bool ShouldDie() const;
@@ -22,30 +26,17 @@ class Process {
 
     [[nodiscard]] size_t GetCyclesNumber() const;
 
-    [[nodiscard]] double GetProfit() const;
+    [[nodiscard]] double CalculateProfit();
 
-    void CalculateProfit();
+    [[nodiscard]] bool CanStart(size_t remaining_cycles) const;
 
-    void RecursiveRun(std::list<Process>& running_processes);
-
-    static bool ProfitComparator(Process* a, Process* b);
-
-    [[nodiscard]] bool IsAvailable();
-
-    void SetAvailable(bool available);
-
-    [[nodiscard]] bool CanStart() const;
-
-    [[nodiscard]] double GetProducedResourceMultiplier(Resource* produced_resource) const;
+    void StartProcess();
 
  private:
     std::string _name;
-    size_t _cycles_number = 0;
+    size_t _required_cycles = 0;
     size_t _current_cycle = 0;
     std::vector<std::pair<Resource*, double>> _required_resources;
     std::vector<std::pair<Resource*, double>> _produced_resources;
-    double _profit = 0;
-    bool _available = true;
 
-    void StartProcess();
 };

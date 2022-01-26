@@ -438,8 +438,8 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    39,    39,    40,    42,    43,    44,    45,    48,    49,
-      52,    60,    72,    75,    76,    79,    84,    87,    88,    91,
-      96,    99,   100,   103
+      52,    60,    75,    78,    79,    82,    87,    90,    91,    94,
+      99,   102,   103,   106
 };
 #endif
 
@@ -1389,6 +1389,9 @@ yyreduce:
                         if (graph->GetProcessByName((yyvsp[(1) - (7)].word)) != nullptr) {
                             throw std::runtime_error("Multiple initializations of the same process \"" + std::string((yyvsp[(1) - (7)].word)) + "\"");
                         }
+                        if ((yyvsp[(7) - (7)].number) == 0) {
+                            throw std::runtime_error("Process can't have 0 cycles to run \"" + std::string((yyvsp[(1) - (7)].word)) + "\"");
+                        }
                         Process process((yyvsp[(1) - (7)].word), (yyvsp[(7) - (7)].number),
                                         std::move(ParseProcess::GetRequiredResources()),
                                         std::move(ParseProcess::GetProducedResources()));
@@ -1398,21 +1401,21 @@ yyreduce:
     break;
 
   case 15:
-#line 79 "Grammar.yacc"
+#line 82 "Grammar.yacc"
     {
                         ParseProcess::AddRequiredResource((yyvsp[(1) - (3)].word), (yyvsp[(3) - (3)].number), graph);
                     }
     break;
 
   case 19:
-#line 91 "Grammar.yacc"
+#line 94 "Grammar.yacc"
     {
                         ParseProcess::AddProducedResource((yyvsp[(1) - (3)].word), (yyvsp[(3) - (3)].number), graph);
                     }
     break;
 
   case 23:
-#line 103 "Grammar.yacc"
+#line 106 "Grammar.yacc"
     {
                         if (strcmp((yyvsp[(1) - (1)].word), "time") == 0) {
                             graph->AddOptimizeByTime();
@@ -1429,7 +1432,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1433 "Grammar.yy.cpp"
+#line 1436 "Grammar.yy.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1643,6 +1646,6 @@ yyreturn:
 }
 
 
-#line 116 "Grammar.yacc"
+#line 119 "Grammar.yacc"
 
 

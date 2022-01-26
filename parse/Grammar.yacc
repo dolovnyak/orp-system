@@ -61,6 +61,9 @@ PROCESS:
                         if (graph->GetProcessByName($1) != nullptr) {
                             throw std::runtime_error("Multiple initializations of the same process \"" + std::string($1) + "\"");
                         }
+                        if ($7 == 0) {
+                            throw std::runtime_error("Process can't have 0 cycles to run \"" + std::string($1) + "\"");
+                        }
                         Process process($1, $7,
                                         std::move(ParseProcess::GetRequiredResources()),
                                         std::move(ParseProcess::GetProducedResources()));
