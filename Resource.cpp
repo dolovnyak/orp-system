@@ -45,10 +45,22 @@ double Resource::GetPriceCoefficient() const {
 }
 
 double Resource::GetEstimatedPrice() const {
-    double number = _number == 0 ? 1 : _number;
-    return 1 / _future_number * _price_coefficient;
+    double future_number = _number + _future_income == 0 ? 1 : _number + _future_income;
+    return 1 / future_number * _price_coefficient;
 }
 
-void Resource::AddFuture(double number) {
-    _future_number += number;
+void Resource::SetFutureIncome(double future_income) {
+    _future_income = future_income;
+}
+
+void Resource::UpdateMaxNumber(double number) {
+    _max_number = std::max(number, _max_number);
+}
+
+bool Resource::HasMaxNumber() {
+    return _number + _future_income >= _max_number;
+}
+
+bool Resource::GetMaxNumber() {
+    return _max_number;
 }

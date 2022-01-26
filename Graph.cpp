@@ -56,7 +56,7 @@ void Graph::AddOptimizeByTime() {
 void Graph::Print() const {
     std::cout << "GRAPH:" << std::endl;
     for (const auto& resource : _resources) {
-        std::cout << "Resource: \"" << resource.GetName() << ":" << resource.GetNumber() << ":" << resource.GetPriceCoefficient() << "\"" << std::endl;
+        std::cout << "Resource: \"" << resource.GetName() << ":" << resource.GetNumber() << ":" << resource.GetEstimatedPrice() << "\"" << std::endl;
     }
     std::cout << std::endl;
     std::cout << "Processes:" << std::endl;
@@ -88,10 +88,12 @@ std::list<Resource>& Graph::GetResources() {
 ///     * If resource available and not resource through which we need to calculate A (B) - calculate it through B
 /// * When all resources calculated, the price resulting from this process is "SUM(all B_multipliers) / A_multiplier"
 /// Return min result of processes or NaN if no one process return result.
-double Graph::CalculateAFromB(Resource* a, Resource* b) {
+std::optional<Graph::MinMax> Graph::CalculateAFromB(Resource* a, Resource* b) {
     a->SetAvailable(false);
 
-    double min_process_result = std::numeric_limits<double>::max();
+    MinMax min_max_result{};
+    min_max_result.min = std::numeric_limits<double>::max();
+    min_max_result.max = std::numeric_limits<double>::min();
     bool result_set = false;
 
     for (auto& a_process : a->GetProcesses()) {
@@ -106,12 +108,14 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
         }
 
         /// Calculate each required element from B and sum multipliers
-        double b_multipliers_sum = 0;
+        double b_min_sum = 0;
+        double b_max_sum = 0;
         bool b_multiplier_set = false;
         for (auto& required_resource_p : a_process->GetRequiredResources()) {
             if (required_resource_p.first == b) {
                 /// If Resource is B (resource through which we need to calculate A) - get it multiplier
-                b_multipliers_sum += required_resource_p.second;
+                b_min_sum += required_resource_p.second;
+                b_max_sum += required_resource_p.second;
                 b_multiplier_set = true;
             }
             else if (!required_resource_p.first->IsAvailable()) {
@@ -120,24 +124,27 @@ double Graph::CalculateAFromB(Resource* a, Resource* b) {
             }
             else {
                 /// If resource is available and it's not B. Calculate it from B
-                double tmp_multiplier = CalculateAFromB(required_resource_p.first, b);
-                if (std::isnan(tmp_multiplier)) {
+                auto tmp_min_max = CalculateAFromB(required_resource_p.first, b);
+                if (!tmp_min_max.has_value()) {
                     continue;
                 }
-                b_multipliers_sum += tmp_multiplier;
+                b_min_sum += tmp_min_max->min;
+                b_max_sum += tmp_min_max->max;
                 b_multiplier_set = true;
             }
         }
         if (b_multiplier_set) {
-            min_process_result = std::min(min_process_result, b_multipliers_sum / a_multiplier);
+            min_max_result.min = std::min(min_max_result.min, b_min_sum / a_multiplier);
+            min_max_result.max = std::max(min_max_result.max, b_max_sum);
             result_set = true;
         }
     }
     a->SetAvailable(true);
+
     if (result_set) {
-        return min_process_result;
+        return min_max_result;
     }
-    return std::numeric_limits<double>::quiet_NaN();
+    return std::nullopt;
 }
 
 std::list<Process>& Graph::GetProcesses() {

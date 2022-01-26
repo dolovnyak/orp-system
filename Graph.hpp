@@ -1,11 +1,17 @@
 #pragma once
 
 #include <list>
+#include <optional>
 #include "Resource.hpp"
 #include "Process.hpp"
 
 class Graph {
  public:
+    struct MinMax {
+        double min;
+        double max;
+    };
+
     Resource* GetResourceByName(const std::string& name);
 
     Process* GetProcessByName(const std::string& name);
@@ -24,7 +30,7 @@ class Graph {
 
     [[nodiscard]] std::list<Process>& GetProcesses();
 
-    [[nodiscard]] double CalculateAFromB(Resource* a, Resource* b);
+    [[nodiscard]] std::optional<MinMax> CalculateAFromB(Resource* a, Resource* b);
 
     void Print() const;
 

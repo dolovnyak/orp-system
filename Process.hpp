@@ -30,6 +30,8 @@ class Process {
 
     [[nodiscard]] bool CanStart(size_t remaining_cycles) const;
 
+    [[nodiscard]] bool NeedToStart() const;
+
     void StartProcess();
 
  private:

@@ -14,7 +14,7 @@ public:
 
     void Add(double number);
 
-    void AddFuture(double number);
+    void SetFutureIncome(double future_income);
 
     [[nodiscard]] const std::string& GetName() const;
 
@@ -34,11 +34,18 @@ public:
 
     [[nodiscard]] double GetEstimatedPrice() const;
 
+    void UpdateMaxNumber(double number);
+
+    [[nodiscard]] bool HasMaxNumber();
+
+    [[nodiscard]] bool GetMaxNumber();
+
 private:
     std::string _name;
     std::vector<Process*> _processes;
     double _number = 0;
-    double _future_number = 0;
+    double _future_income = 0;
     double _price_coefficient = 0;
+    double _max_number = 0;
     bool _available = true;
 };

@@ -69,31 +69,30 @@ void run_optimize_processes_by_profit(Graph& graph, std::list<Process>& running_
         return;
     }
 
-    /// Пoка лист процессов не пуст:
-    ///     * Удалить из листа все процессы, которые не могут быть запущены.
-    ///     * Для всех процессов, которые могут быть запущены - вычислить их профит
-    ///     * Запустить самый выгодный процесс
-//    Process* max_profit_process;
-//    double current_max_profit = std::numeric_limits<double>::lowest();
-//    for (auto process: possible_to_run_processes) {
-//        double tmp_max_profit = process->CalculateProfit();
-//        if (tmp_max_profit > current_max_profit) {
-//            max_profit_process = process;
-//            current_max_profit = tmp_max_profit;
-//        }
-//    }
-//    Process running_process(*max_profit_process);
-//    running_process.StartProcess();
-//    running_processes.push_back(running_process);
-
     while (!possible_to_run_processes.empty()) {
         Process* max_profit_process;
-        double current_max_profit = 0;
+        bool any_process_need_to_start = false;
+        double current_max_profit = std::numeric_limits<double>::lowest();
         for (auto process : possible_to_run_processes) {
+            if (!process->NeedToStart()) {
+                continue;
+            }
+            any_process_need_to_start = true;
             double tmp_max_profit = process->CalculateProfit();
             if (tmp_max_profit > current_max_profit) {
                 max_profit_process = process;
+                current_max_profit = tmp_max_profit;
             }
+        }
+        if (!any_process_need_to_start) {
+            if (running_processes.empty()) {
+                for (auto& resource : graph.GetResources()) {
+                    resource.UpdateMaxNumber(resource.GetMaxNumber() * 2);
+                }
+                delete_not_possible_to_start_processes(possible_to_run_processes, remaining_cycles);
+                continue;
+            }
+            break;
         }
         Process running_process(*max_profit_process);
         running_process.StartProcess();

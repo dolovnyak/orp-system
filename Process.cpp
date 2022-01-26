@@ -70,7 +70,7 @@ void Process::StartProcess() {
         required_resource_p.first->Add(-required_resource_p.second);
     }
     for (auto& produced_resource_p : _produced_resources) {
-        produced_resource_p.first->AddFuture(produced_resource_p.second);
+        produced_resource_p.first->SetFutureIncome(produced_resource_p.second);
     }
 }
 
@@ -94,34 +94,12 @@ double Process::CalculateProfit() {
     return (produced_price - required_price) / static_cast<double>(_required_cycles);
 }
 
-//bool Process::RecursiveRun(std::list<Process>& running_processes, size_t remaining_cycles, size_t prev_cycles) {
-////    if (!IsAvailable()) {
-////        return;
-////    }
-//    if (prev_cycles + _required_cycles > remaining_cycles) {
-//        return false;
-//    }
-////    SetAvailable(false);
-//    bool is_any_process_run;
-//    if (CanStart()) {
-//        Process running_process(*this);
-//        running_process.StartProcess();
-//        running_processes.push_back(running_process);
-//        is_any_process_run = true;
-//    }
-//    for (auto required_resource_p : _required_resources) {
-//        auto required_resource = required_resource_p.first;
-//        if (!required_resource->IsAvailable()) {
-//            continue;
-//        }
-//        required_resource->SetAvailable(false);
-//        for (auto process : required_resource->GetProcesses()) {
-//            if (process->RecursiveRun(running_processes, remaining_cycles, prev_cycles + _required_cycles)) {
-//                is_any_process_run = true;
-//            }
-//        }
-//        required_resource->SetAvailable(true);
-//    }
-////    SetAvailable(true);
-//    return is_any_process_run;
-//}
+bool Process::NeedToStart() const {
+    bool is_resources_needed = false;
+    for (auto produced_resource_p : _produced_resources) {
+        if (!produced_resource_p.first->HasMaxNumber()) {
+            is_resources_needed = true;
+        }
+    }
+    return is_resources_needed;
+}
