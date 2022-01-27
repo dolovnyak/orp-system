@@ -1,5 +1,13 @@
 #include "GraphCalculator.hpp"
 
+namespace {
+
+    inline double sigmoid(double x) {
+        return x / (1.0 + abs(x));
+    }
+
+}
+
 void GraphCalculator::Calculate(Graph& graph) {
     std::unordered_map<Resource*, AveragePrice> average_prices;
 
@@ -8,7 +16,9 @@ void GraphCalculator::Calculate(Graph& graph) {
         resource_to_optimize->UpdateMaxNumber(std::numeric_limits<double>::max());
         for (auto& resource : graph.GetResources()) {
 
-            auto resource_a_calculated_from_b = graph.CalculateAFromB(&resource, resource_to_optimize);
+            graph.CalculateProcessesCyclesToGoal(resource_to_optimize, &resource, 0);
+
+            auto resource_a_calculated_from_b = graph.CalculateAFromB(resource_to_optimize, &resource);
             if (resource_a_calculated_from_b.has_value()) {
                 /// increase average resource price
                 if (average_prices.count(&resource) == 0) {
@@ -17,28 +27,19 @@ void GraphCalculator::Calculate(Graph& graph) {
                     average_prices[&resource].price += resource_a_calculated_from_b->min;
                     average_prices[&resource].number += 1;
                 }
-            }
-
-        }
-    }
-
-    for (auto& resource: graph.GetResources()) {
-        if (average_prices.count(&resource) != 0) {
-            resource.SetPriceCoefficient(1 / average_prices[&resource].GetAveragePrice());
-        } else {
-            resource.SetPriceCoefficient(1);
-        }
-    }
-
-    for (auto resource_to_optimize : graph.GetResourcesToOptimize()) {
-        for (auto& resource : graph.GetResources()) {
-            graph.CalculateProcessesCyclesToGoal(resource_to_optimize, &resource, 0);
-            auto check = graph.CalculateAFromB(resource_to_optimize, &resource);
-            if (check.has_value()) {
                 if (!IsResourceToOptimize(&resource, graph)) {
-                    resource.UpdateMaxNumber(check->max);
+                    resource.UpdateMaxNumber(resource_a_calculated_from_b->max);
                 }
             }
+
+        }
+    }
+
+    for (auto& resource : graph.GetResources()) {
+        if (average_prices.count(&resource) != 0) {
+            resource.SetPriceCoefficient(average_prices[&resource].GetAveragePrice());
+        } else {
+            resource.SetPriceCoefficient(0);
         }
     }
 

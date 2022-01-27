@@ -12,8 +12,7 @@ add_executable(${PROJECT_NAME}
         parse/Grammar.yy.cpp
         parse/Lexer.ll.cpp
         parse/ParseProcess.cpp
-        parse/ParseProcess.hpp
-        )
+        ProcessesRunner.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         utilities
@@ -29,5 +28,5 @@ set_target_properties(${PROJECT_NAME}
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}"
         )
 
-set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
