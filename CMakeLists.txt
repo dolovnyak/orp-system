@@ -12,7 +12,7 @@ add_executable(${PROJECT_NAME}
         parse/Grammar.yy.cpp
         parse/Lexer.ll.cpp
         parse/ParseProcess.cpp
-        ProcessesRunner.cpp)
+        )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         utilities
