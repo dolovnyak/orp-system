@@ -1,5 +1,7 @@
 # Optimal resource production system
-###
+
+## MacOS - ![Build](https://github.com/dolovnyak/orp-system/actions/workflows/build.yml/badge.svg?branch=master)
+
 
 Program that calculate approximately optimal way to produce resources with verifier.
 --------------
