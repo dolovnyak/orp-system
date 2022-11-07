@@ -1,13 +1,5 @@
 #include "GraphCalculator.hpp"
 
-namespace {
-
-    inline double sigmoid(double x) {
-        return x / (1.0 + abs(x));
-    }
-
-}
-
 void GraphCalculator::Calculate(Graph& graph) {
     std::unordered_map<Resource*, AveragePrice> average_prices;
 
@@ -42,5 +34,4 @@ void GraphCalculator::Calculate(Graph& graph) {
             resource.SetPriceCoefficient(0);
         }
     }
-
 }

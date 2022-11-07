@@ -4,20 +4,20 @@ project(krpsim)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
-        main.cpp
-        Process.cpp
-        Resource.cpp
-        Graph.cpp
-        GraphCalculator.cpp
-        parse/Grammar.yy.cpp
-        parse/Lexer.ll.cpp
-        parse/ParseProcess.cpp
+        src/main.cpp
+        src/Process.cpp
+        src/Resource.cpp
+        src/Graph.cpp
+        src/GraphCalculator.cpp
+        src/parse/Grammar.yy.cpp
+        src/parse/Lexer.ll.cpp
+        src/parse/ParseProcess.cpp
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        utilities
-        parse
-        .
+        src/utilities
+        src/parse
+        src
         )
 
 INCLUDE(ParseGenerator.cmake)

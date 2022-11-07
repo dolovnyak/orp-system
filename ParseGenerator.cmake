@@ -4,7 +4,7 @@ set(YACC_INPUT "Grammar.yacc")
 set(YACC_CPP "Grammar.yy.cpp")
 set(YACC_HPP "Grammar.yy.hpp")
 set(INCLUDE_FOR_YACC_HEADER "#include \"ParseProcess.hpp\"")
-set(PARSE_DIR "${CMAKE_SOURCE_DIR}/parse")
+set(PARSE_DIR "${CMAKE_SOURCE_DIR}/src/parse")
 
 # generate lex/yacc parse when build
 add_custom_target(parser_generator ALL
