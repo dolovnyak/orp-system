@@ -4,11 +4,11 @@
 Program that calculate approximately optimal way to produce resources.
 --------------
 
-There are two entity with which we work: resource and process.
-Process recive required resources and returns the result resources for N cycles.
-We have source resources at the start and choose what resources we want to optimize.
+#### There are two entity with which we work: resource and process.
+#### Process recive required resources and returns the result resources for N cycles.
+#### We have source resources at the start and choose what resources we want to optimize.
 
-Simple example:
+#### Example:
 ```
 # source resource template:
 # resource_name:num
