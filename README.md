@@ -26,7 +26,8 @@ Run verifier example:
 python3 krpsim_verif.py examples/example1.txt output.txt
 ```
 
-#### Example:
+Example:
+-----------
 ```
 # source resource template:
 # resource_name:num
